@@ -41,57 +41,55 @@ public class EnemyAttack : MonoBehaviour
 		// + info: http://answers.unity3d.com/questions/26177/how-to-create-a-basic-follow-ai.html	
 		float distance = Vector3.Distance (transform.position, player.transform.position);
 
-		//First case is just for looking at the target.
-		if (distance <= range2 && distance >= range) {			
-			transform.rotation = Quaternion.AngleAxis(angle, Vector3.forward);	
+		if(!enemyAttack && !anim.IsPlaying("DemonAttack"))
+		{
+            //If the demon is not attacking, then set isKinematic again
+            //to false (so the enemy switch to physics)
+            GetComponent<Rigidbody2D>().isKinematic = false;
 
-			//Play the demon's wait animation.
-			anim.CrossFade ("DemonIdle", 0.01f);
-		//Stops.
-		} else if (distance <= stop) {
-			transform.rotation = Quaternion.AngleAxis(angle, Vector3.forward);	
+            //First case is just for looking at the target.
+            if (distance <= range2 && distance >= range)
+            {
+                transform.rotation = Quaternion.AngleAxis(angle, Vector3.forward);
+
+                //Play the demon's wait animation.
+                anim.CrossFade("DemonIdle", 0.01f);
+                //Stops.
+            }
+            else if (distance <= stop)
+            {
+                transform.rotation = Quaternion.AngleAxis(angle, Vector3.forward);
+            }
+            //Target in range
+            else if (distance <= range && distance > stop)
+            {
+                // + info about rotation: http://answers.unity3d.com/questions/630670/rotate-2d-sprite-towards-moving-direction.html
+                transform.rotation = Quaternion.AngleAxis(angle, Vector3.forward);
+                //Move object
+                Vector2 movement = transform.right * speed * Time.fixedDeltaTime;
+                GetComponent<Rigidbody2D>().MovePosition(GetComponent<Rigidbody2D>().position + movement);
+                anim.CrossFade("DemonWalk", 0.01f);
+            }
 		}
-		//Target in range
-		else if (distance <= range && distance > stop) {			
-			// Debug.Log ("Demon B - if (distance <= range && distance > stop -- distance: " + distance  + " stop: " + stop);
-
-			// + info about rotation: http://answers.unity3d.com/questions/630670/rotate-2d-sprite-towards-moving-direction.html
-			transform.rotation = Quaternion.AngleAxis(angle, Vector3.forward);	
-
-			if ( !enemyAttack ) {
-				//If the demon is not attacking, then set isKinematic again
-				//to false (so the enemy switch to physics)
-				GetComponent <Rigidbody2D> ().isKinematic = false;
-				//Move object
-				Vector2 movement = transform.right * speed * Time.fixedDeltaTime;
-				GetComponent<Rigidbody2D> ().MovePosition (GetComponent<Rigidbody2D> ().position + movement);
-				//Play the demon's walk animation.
-				anim.CrossFade ("DemonWalk", 0.01f);
-			}
-		}
-
-		if (enemyAttack) {
+		else {
 			timer += Time.fixedDeltaTime;
 
-			Debug.Log ("Time.fixedDeltaTime: " + Time.fixedDeltaTime + " Time.deltaTime: " + Time.deltaTime);
+            //When the demon is hitting the player,
+            //we set isKinematic to true (switches off the physical behaviour) so that
+            //it will not react to gravity and collisions.
+            //If not, the enemy could be moved by the player impact.
+            GetComponent<Rigidbody2D>().isKinematic = true;
 
-			if( timer >= timeBetweenAttacks )
+            if( timer >= timeBetweenAttacks )
 			{
 				Attack ();
 			}
-
 		}
-		
 	}
 
 	void Attack() {
 		timer = 0f;
-
-		//When the demon is hitting the player,
-		//we set isKinematic to true (switches off the physical behaviour) so that
-		//it will not react to gravity and collisions.
-		//If not, the enemy could be moved by the player impact.
-		GetComponent <Rigidbody2D> ().isKinematic = true;
+	
 		//Play the demon's attack animation.
 		anim.Play ("DemonAttack");
 
