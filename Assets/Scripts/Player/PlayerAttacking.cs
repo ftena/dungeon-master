@@ -60,13 +60,16 @@ public class PlayerAttacking : MonoBehaviour
         //Choose a random pitch to play back our clip at between our high and low pitch ranges.
         float randomPitch = Random.Range(lowPitchRange, highPitchRange);
 
-        //Set the pitch of the audio source to the randomly chosen pitch.
-        attackAudio.pitch = randomPitch;
+        if(!attackAudio.isPlaying)
+        {
+            //Set the pitch of the audio source to the randomly chosen pitch.
+            attackAudio.pitch = randomPitch;
 
-        //Set the clip to the clip at our randomly chosen index.
-        attackAudio.clip = clips[randomIndex];
+            //Set the clip to the clip at our randomly chosen index.
+            attackAudio.clip = clips[randomIndex];
 
-        //Play the clip.
-        attackAudio.Play();
+            //Play the clip.
+            attackAudio.Play();
+        }
     }
 }
