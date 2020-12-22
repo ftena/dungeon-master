@@ -68,7 +68,7 @@ public class Player : MonoBehaviour {
 		}
 		else if (other.tag == "Key")
 		{
-			//... the player got the kay, then set the other object (key in this case) we just collided with to inactive.
+			//... the player got the key, then set the other object (key in this case) we just collided with to inactive.
 			other.gameObject.SetActive(false);
 
 			keyImage.SetActive(true);

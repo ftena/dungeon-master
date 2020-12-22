@@ -72,4 +72,7 @@ public class PlayerAttacking : MonoBehaviour
             attackAudio.Play();
         }
     }
+	void OnTriggerStay2D(Collider2D other) {		
+        Debug.Log("i'm here");
+    }
 }

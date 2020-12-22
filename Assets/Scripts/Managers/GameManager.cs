@@ -13,7 +13,6 @@ namespace Completed
 		public float turnDelay = 0.1f;							//Delay between each Player turn.
 		public int playerFoodPoints = 100;						//Starting value for Player food points.
 		public static GameManager instance = null;				//Static instance of GameManager which allows it to be accessed by any other script.
-
 		private GameObject keyImage; 							//Key found by the player. 
 		private Text levelText;									//Text to display current level number.
 		private GameObject levelImage;							//Image to block out level as levels are being set up, background for levelText.
@@ -111,7 +110,7 @@ namespace Completed
 			
 			//Call the HideLevelImage function with a delay in seconds of levelStartDelay.
 			Invoke("HideLevelImage", levelStartDelay);
-						
+
 			//Call the SetupScene function of the BoardCreator script, pass it current level number.
 			boardCreator.SetupScene(level);	
 
@@ -141,7 +140,7 @@ namespace Completed
 		public void GameOver()
 		{
 			//Set levelText to display number of levels passed and game over message
-			levelText.text = "After " + level + " days, you starved.";
+			levelText.text = "After " + level + " days, you died.";
 			
 			//Enable black background image gameObject.
 			levelImage.SetActive(true);
