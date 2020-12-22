@@ -1,4 +1,6 @@
-﻿using System.Collections;
+﻿//Based on the Unity tutorial "Basic 2D Dungeon Generation"
+
+using System.Collections;
 using UnityEngine;
 using System.Collections.Generic; 		//Allows us to use Lists.
 
