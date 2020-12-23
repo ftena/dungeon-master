@@ -3,7 +3,7 @@ using System.Collections.Generic; 		//Allows us to use Lists.
 
 public class PlayerAttacking : MonoBehaviour
 {
-    public int damagePerShot = 20;
+    public int damagePerShot = 1;
     public float timeBetweenAttacks = 0.15f;
 
     public List<AudioClip> attackClips;
@@ -13,7 +13,8 @@ public class PlayerAttacking : MonoBehaviour
     float timer;
     AudioSource attackAudio;
 
-    private Animation anim;                     //Used to store a reference to the Player's animation component.
+    private Animation anim;                         //Used to store a reference to the Player's animation component.
+    private bool playerTouchingEnemy = false;       //Used to check if the player is touching an enemy
 
     void Awake()
     {
@@ -39,16 +40,6 @@ public class PlayerAttacking : MonoBehaviour
         //Play the player's attack animation.
         anim.CrossFade("Attack", 0.01f);
         RandomizeSfx(attackClips);
-        //TODO: EnemyHealth enemyHealth = shootHit.collider.GetComponent <EnemyHealth> ();
-        /* We can also hit walls or legos, so we must check if enemyHealth has
-         * a script.
-         */
-        /*
-       if(enemyHealth != null)
-       {
-           enemyHealth.TakeDamage (damagePerShot, shootHit.point);
-       }
-       */
     }
 
     //RandomizeSfx chooses randomly between various audio clips and slightly changes their pitch.
@@ -73,6 +64,21 @@ public class PlayerAttacking : MonoBehaviour
         }
     }
 	void OnTriggerStay2D(Collider2D other) {		
-        Debug.Log("i'm here");
+        playerTouchingEnemy = true;
+        if (timer <= timeBetweenAttacks) //Player is attacking.
+        {
+            EnemyHealth enemyHealth = other.GetComponent<EnemyHealth>();
+            /* We can also hit walls or legos, so we must check if enemyHealth has
+             * a script. */
+            if (enemyHealth != null)
+            {
+                enemyHealth.TakeDamage(damagePerShot);
+            }
+        }
+    }
+
+    void OnTriggerExit2D(Collider2D other)
+    {
+        playerTouchingEnemy = false;
     }
 }
