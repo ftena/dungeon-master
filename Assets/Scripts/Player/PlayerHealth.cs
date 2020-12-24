@@ -14,23 +14,23 @@ public class PlayerHealth : MonoBehaviour
     public Color flashColour = new Color(1f, 0f, 0f, 0.1f);
 
 
-    Animator anim;
+    Animation anim;
     AudioSource playerAudio;
-	// PlayerMovement is the name of the script
-    // TODO: ¿remove? PlayerMovement playerMovement;
-	// PlayerShooting is the name of the script
-	// TODO: ¿remove? PlayerShooting playerShooting;
+    PlayerAttacking playerAttacking; //PlayerAttacking is the name of the script
+	Player player; //Player is the name of the script
     bool isDead;
     bool damaged;
 
 
     void Awake ()
     {
-        // TDODO: redo: anim = GetComponent <Animator> ();
+        anim = transform.Find("Knight").gameObject.GetComponent<Animation>();
+        //The next line means "plays back the animation".
+        //When it reaches the end, it will keep playing the last frame (played has died) and never stop playing.
+        anim["Dead"].wrapMode = WrapMode.ClampForever;
         playerAudio = GetComponent <AudioSource> ();
-		// TODO: ¿remove? playerMovement = GetComponent <PlayerMovement> ();
-		// PlayerShooting is on the GunBarrelEnd
-		// TODO: ¿remove? playerShooting = GetComponentInChildren <PlayerShooting> ();
+		playerAttacking = GetComponent <PlayerAttacking> ();
+		player = GetComponent <Player> ();
         currentHealth = startingHealth;
     }
 
@@ -48,6 +48,13 @@ public class PlayerHealth : MonoBehaviour
         damaged = false;
     }
 
+	void FixedUpdate ()
+    {
+        if(isDead)
+        {
+            anim.Play("Dead");
+        }
+    }
 
     public void TakeDamage (int amount)
     {
@@ -70,16 +77,12 @@ public class PlayerHealth : MonoBehaviour
     void Death ()
     {
         isDead = true;
-
-		// TODO: ¿remove? playerShooting.DisableEffects ();
-
-        // TODO: redo: anim.SetTrigger ("Die");
-
         playerAudio.clip = deathClip;
         playerAudio.Play ();
 
-		// TODO: ¿remove? playerMovement.enabled = false;
-		// TODO: ¿remove? playerShooting.enabled = false;
+        //Disable player's scripts
+		playerAttacking.enabled = false;
+		player.enabled = false;
     }
 
 	// TODO: OLD CODE
