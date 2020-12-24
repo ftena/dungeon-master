@@ -14,7 +14,7 @@ public class PlayerAttacking : MonoBehaviour
     AudioSource attackAudio;
 
     private Animation anim;                         //Used to store a reference to the Player's animation component.
-    private bool playerTouchingEnemy = false;       //Used to check if the player is touching an enemy
+    EnemyHealth enemyHealth;
 
     void Awake()
     {
@@ -27,7 +27,7 @@ public class PlayerAttacking : MonoBehaviour
         /* Similar to EnemyAttack.cs */
         timer += Time.deltaTime;
 
-        if (Input.GetButton("Fire1")) 
+        if (Input.GetButton("Fire1") ) 
         {
             Attack();
         }
@@ -35,11 +35,18 @@ public class PlayerAttacking : MonoBehaviour
 
     void Attack()
     {
-        // Reset time because we're firing now
-        timer = 0f;
         //Play the player's attack animation.
         anim.CrossFade("Attack", 0.01f);
         RandomizeSfx(attackClips);
+
+        /* We can also hit walls or legos, so we must check if enemyHealth has
+         * a script. */
+        if (enemyHealth != null && timer >= timeBetweenAttacks)
+        {
+            // Reset time because we're firing now
+            timer = 0f;
+            enemyHealth.TakeDamage(damagePerShot);
+        }
     }
 
     //RandomizeSfx chooses randomly between various audio clips and slightly changes their pitch.
@@ -64,21 +71,11 @@ public class PlayerAttacking : MonoBehaviour
         }
     }
 	void OnTriggerStay2D(Collider2D other) {		
-        playerTouchingEnemy = true;
-        if (timer <= timeBetweenAttacks) //Player is attacking.
-        {
-            EnemyHealth enemyHealth = other.GetComponent<EnemyHealth>();
-            /* We can also hit walls or legos, so we must check if enemyHealth has
-             * a script. */
-            if (enemyHealth != null)
-            {
-                enemyHealth.TakeDamage(damagePerShot);
-            }
-        }
+        enemyHealth = other.GetComponent<EnemyHealth>();
     }
 
     void OnTriggerExit2D(Collider2D other)
     {
-        playerTouchingEnemy = false;
+        enemyHealth = null;
     }
 }
