@@ -5,14 +5,17 @@ using UnityEngine.SceneManagement;
 public class Player : MonoBehaviour {
 	public float speed = 5f;
 	public float rotSpeed = 5f;
-	public float restartLevelDelay = 1f;		//Delay time in seconds to restart level.
-
+	public float restartLevelDelay = 2f;		//Delay time in seconds to restart level.
+    public AudioClip keyClip;
+    public AudioClip doorClip;
+    AudioSource playerAudio;
 	private Animation anim;                     //Used to store a reference to the Player's animation component.
 	private GameObject keyImage;                            //Key found by the player. 
 
     void Awake()
     {
 		keyImage = GameObject.Find("KeyImage");
+        playerAudio = GetComponent<AudioSource> ();
     }
 
 	void Start () {
@@ -57,6 +60,9 @@ public class Player : MonoBehaviour {
 			//Complete the level only if the key was found
 			if(keyImage.activeSelf)
 			{
+        		playerAudio.clip = doorClip;
+        		playerAudio.Play ();
+
 				other.GetComponent<RandomRotator>().Speed = 200f;
 
                 //Invoke the Restart function to start the next level with a delay of restartLevelDelay (default 1 second).
@@ -73,8 +79,8 @@ public class Player : MonoBehaviour {
 
 			keyImage.SetActive(true);
 
-			//Update something by calling the SetText function.
-			//SetText();
+        	playerAudio.clip = keyClip;
+        	playerAudio.Play ();
 		}
 	}
 
