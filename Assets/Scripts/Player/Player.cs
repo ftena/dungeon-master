@@ -10,7 +10,7 @@ public class Player : MonoBehaviour {
     public AudioClip doorClip;
     AudioSource playerAudio;
 	private Animation anim;                     //Used to store a reference to the Player's animation component.
-	private GameObject keyImage;                            //Key found by the player. 
+	private GameObject keyImage;                //Key found by the player. 
 
     void Awake()
     {
