@@ -16,6 +16,10 @@ public class GameOverManager : MonoBehaviour
         if (playerHealth.currentHealth <= 0)
         {
             anim.SetTrigger("GameOver");
+
+            GameManager.instance.GameOver();
+
+            enabled = false; //Enabled Behaviours are Updated, disabled Behaviours are not.
         }        
     }
 }

@@ -9,7 +9,7 @@ public class EnemyAttack : MonoBehaviour
 	public int attackDamage = 50;				//Default value. It is defined in the Inspector.
 
 	GameObject player;							//Store the player via its game object.
-	PlayerHealth playerHealth;					//Store a reference to the PlayerHealht object.
+	PlayerHealth playerHealth;					//Store a reference to the PlayerHealth object.
 
 	private Animation anim;                     //Used to store a reference to the Player's animation component.
 	private List<string> attackAnimations;      //A list of attack animations
